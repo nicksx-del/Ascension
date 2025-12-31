@@ -493,64 +493,214 @@
             if (streakEl) streakEl.textContent = streak;
         }
 
+        // Calendar State
+        let currentCalendarDate = new Date(); // Controls the month view
+        let selectedDateStr = new Date().toISOString().split('T')[0]; // Controls the habits view (defaults to today)
+
+        // Initialize and Render
+        document.addEventListener('DOMContentLoaded', () => {
+            renderHabits();
+            renderCalendar();
+            calculateStats();
+            setupCalendarNavigation();
+            updateHabitsHeader();
+        });
+
+        function updateHabitsHeader() {
+            const header = document.querySelector('.habits-title');
+            if (header) {
+                // If selected date is today, say "Today's Habits", else "Habits for [Date]"
+                const today = new Date().toISOString().split('T')[0];
+                if (selectedDateStr === today) {
+                    header.textContent = "Today's Habits";
+                } else {
+                    const dateObj = new Date(selectedDateStr + 'T00:00:00');
+                    const options = { month: 'short', day: 'numeric' };
+                    header.textContent = `Habits for ${dateObj.toLocaleDateString(undefined, options)}`;
+                }
+            }
+        }
+
+        // Setup Calendar Navigation
+        function setupCalendarNavigation() {
+            const arrows = document.querySelectorAll('.nav-arrow');
+            if (arrows.length >= 2) {
+                // Prev Month
+                arrows[0].addEventListener('click', () => {
+                    currentCalendarDate.setMonth(currentCalendarDate.getMonth() - 1);
+                    renderCalendar();
+                });
+                // Next Month
+                arrows[1].addEventListener('click', () => {
+                    currentCalendarDate.setMonth(currentCalendarDate.getMonth() + 1);
+                    renderCalendar();
+                });
+            }
+        }
+
+        // Render Habits from LocalStorage
+        function renderHabits() {
+            const habits = JSON.parse(localStorage.getItem('ascension_habits') || '[]');
+            const habitsList = document.getElementById('habitsList');
+            // USE GLOBAL SELECTED DATE, NOT TODAY
+            const viewDateStr = selectedDateStr;
+
+            if (habits.length === 0) {
+                habitsList.innerHTML = `
+                    <div style="text-align: center; padding: 40px 20px; color: #9e9ea3;">
+                        <p>Nenhum hábito criado ainda.</p>
+                        <p style="font-size: 13px; margin-top: 8px;">Clique no botão + para criar seu primeiro hábito</p>
+                    </div>
+                `;
+                return;
+            }
+
+            habitsList.innerHTML = '';
+
+            habits.forEach((habit, index) => {
+                const color = habit.color || '#FF6B00';
+                const isCompletedOnDate = habit.completedDates && habit.completedDates.includes(viewDateStr);
+
+                const item = document.createElement('div');
+                item.className = 'habit-item';
+                item.innerHTML = `
+                    <div class="habit-icon" style="background: ${color}; color: white; border-radius: 12px; width: 40px; height: 40px; display: flex; align-items: center; justify-content: center;">
+                        <div style="width: 20px; height: 20px; fill: currentColor;">
+                            ${habit.icon}
+                        </div>
+                    </div>
+                    <div class="habit-info">
+                        <div class="habit-name">${habit.name}</div>
+                        <div class="habit-meta">⏰ ${habit.time} • ${habit.goal}x</div>
+                    </div>
+                    <div class="habit-checkbox ${isCompletedOnDate ? 'checked' : ''}" onclick="toggleHabit(${index})"></div>
+                `;
+                habitsList.appendChild(item);
+            });
+        }
+
+        // Toggle habit checkbox with Date History
+        function toggleHabit(index) {
+            const habits = JSON.parse(localStorage.getItem('ascension_habits') || '[]');
+            const targetDateStr = selectedDateStr; // Use selected date
+            const habit = habits[index];
+
+            if (!habit.completedDates) {
+                habit.completedDates = [];
+            }
+
+            if (habit.completedDates.includes(targetDateStr)) {
+                habit.completedDates = habit.completedDates.filter(d => d !== targetDateStr);
+            } else {
+                habit.completedDates.push(targetDateStr);
+            }
+
+            localStorage.setItem('ascension_habits', JSON.stringify(habits));
+            renderHabits();
+            calculateStats(); // Stats usually update best on 'today' perception or general, but should reflect data changes
+        }
+
+        // Calculate and Display Stats
+        function calculateStats() {
+            const habits = JSON.parse(localStorage.getItem('ascension_habits') || '[]');
+            // Stats often refer to "Today" regardless of view, or should they reflect the view date?
+            // "Daily Goals Met" visually implies "for the day I'm looking at".
+            // "Current Streak" usually implies "upto Today". 
+            // Let's make "Daily Goals Met" reflect the SELECTED date, and Streak remain Global/Current.
+
+            if (habits.length === 0) {
+                updateStatsUI(0, 0);
+                return;
+            }
+
+            // 1. Calculate Daily % (For selected date)
+            const completedOnDate = habits.filter(h => h.completedDates && h.completedDates.includes(selectedDateStr)).length;
+            const percentage = Math.round((completedOnDate / habits.length) * 100);
+
+            // 2. Calculate Streak (Global from Today)
+            let streak = 0;
+            let checkDate = new Date(); // Start from real today
+            const toIso = (d) => d.toISOString().split('T')[0];
+
+            if (!hasActivityOnDate(toIso(checkDate), habits)) {
+                checkDate.setDate(checkDate.getDate() - 1);
+            }
+
+            while (true) {
+                if (hasActivityOnDate(toIso(checkDate), habits)) {
+                    streak++;
+                    checkDate.setDate(checkDate.getDate() - 1);
+                } else {
+                    break;
+                }
+            }
+
+            updateStatsUI(percentage, streak);
+        }
+
+        function hasActivityOnDate(dateStr, habits) {
+            return habits.some(h => h.completedDates && h.completedDates.includes(dateStr));
+        }
+
+        function updateStatsUI(percentage, streak) {
+            const percentEl = document.getElementById('dailyGoalPercent');
+            const barEl = document.getElementById('dailyGoalBar');
+            const streakEl = document.getElementById('currentStreak');
+
+            if (percentEl) percentEl.textContent = `${percentage}%`;
+            if (barEl) barEl.style.width = `${percentage}%`;
+            if (streakEl) streakEl.textContent = streak;
+        }
+
+
         // Render Full Calendar
         function renderCalendar() {
-            const date = new Date();
-            const month = date.getMonth();
-            const year = date.getFullYear();
+            const month = currentCalendarDate.getMonth();
+            const year = currentCalendarDate.getFullYear();
 
             const monthNames = ["January", "February", "March", "April", "May", "June",
                 "July", "August", "September", "October", "November", "December"
             ];
 
             // Update Header
-            document.querySelector('.calendar-title').textContent = 'Calendar';
-            document.querySelector('.calendar-subtitle').textContent = `${monthNames[month]} ${year}`;
+            const sub = document.querySelector('.calendar-subtitle');
+            if (sub) sub.textContent = `${monthNames[month]} ${year}`;
 
             // Get first day of month and total days
             const firstDay = new Date(year, month, 1).getDay();
             const daysInMonth = new Date(year, month + 1, 0).getDate();
-            const today = date.getDate();
+            const today = new Date();
+            const isCurrentMonth = today.getMonth() === month && today.getFullYear() === year;
 
             const calendarDays = document.querySelector('.calendar-days');
             calendarDays.innerHTML = '';
 
-            // Empty slots for days before start of month
+            // Empty slots
             for (let i = 0; i < firstDay; i++) {
                 const emptyDay = document.createElement('div');
                 emptyDay.className = 'day empty';
                 calendarDays.appendChild(emptyDay);
             }
 
-            // Days of the month
+            // Days
             for (let i = 1; i <= daysInMonth; i++) {
                 const dayEl = document.createElement('div');
                 dayEl.className = 'day';
                 dayEl.textContent = i;
 
-                if (i === today) {
-                    dayEl.classList.add('current'); // Black background for today
-                } else if (i < today) {
-                    // Randomly assign status for demo purposes since we don't have historical data
-                    const statuses = ['active', 'completed', 'active', 'partial'];
-                    const status = statuses[Math.floor(Math.random() * statuses.length)];
-                    dayEl.classList.add(status);
-
-                    if (status === 'completed') {
-                        dayEl.style.background = '#FF6B00';
-                        dayEl.style.color = 'white';
-                    } else if (status === 'partial') {
-                        // Partial logic is CSS ::after
-                    }
+                if (isCurrentMonth && i === today.getDate()) {
+                    dayEl.classList.add('current');
+                    dayEl.style.background = '#000';
+                    dayEl.style.color = 'white';
                 } else {
-                    dayEl.classList.add('inactive'); // Future days
+                    dayEl.style.color = '#333';
+                    dayEl.style.background = 'transparent';
                 }
 
                 calendarDays.appendChild(dayEl);
             }
         }
 
-        renderCalendar();
     </script>
 </body>
 

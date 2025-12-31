@@ -1329,6 +1329,97 @@ body {
     font-weight: 600;
 }
 
+/* Donut Chart */
+.donut-chart-container {
+    display: flex;
+    justify-content: center;
+    position: relative;
+    padding: 20px 0;
+    margin-bottom: 12px;
+}
+
+.donut-chart {
+    width: 280px;
+    height: 280px;
+    position: relative;
+}
+
+.circular-chart {
+    display: block;
+    margin: 0 auto;
+    max-width: 100%;
+    max-height: 100%;
+    transform: rotate(-90deg);
+    /* Start at top */
+}
+
+.circle-bg {
+    fill: none;
+    stroke: #f2f2f7;
+    stroke-width: 2.5;
+}
+
+.circle {
+    fill: none;
+    stroke-width: 2.5;
+    /* Match design thickness */
+    stroke-linecap: round;
+    animation: progress 1s ease-out forwards;
+    transform-origin: center;
+}
+
+.circle.green {
+    stroke: #34C759;
+}
+
+.circle.yellow {
+    stroke: #FFCC00;
+}
+
+.circle.orange {
+    stroke: #FF6B00;
+}
+
+@keyframes progress {
+    0% {
+        stroke-dasharray: 0 100;
+    }
+}
+
+.chart-center-text {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+}
+
+.chart-label {
+    font-size: 13px;
+    color: #9e9ea3;
+    font-weight: 500;
+}
+
+.chart-amount {
+    font-size: 32px;
+    font-weight: 800;
+    color: #1d1d1f;
+    letter-spacing: -0.5px;
+}
+
+.chart-trend {
+    font-size: 13px;
+    color: #34C759;
+    font-weight: 600;
+    background: rgba(52, 199, 89, 0.1);
+    padding: 4px 8px;
+    border-radius: 100px;
+}
+
 /* Filters */
 .filters {
     display: flex;

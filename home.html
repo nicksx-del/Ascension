@@ -85,7 +85,7 @@
             </div>
             <div class="stat-card" style="cursor: pointer;" onclick="window.location.href='cashback.html'">
                 <div class="stat-title">Cash Back</div>
-                <div class="cashback-amount">+ R$ 124,50</div>
+                <div class="cashback-amount" id="homeCashbackDisplay">R$ 0,00</div>
                 <div class="cashback-icons">
                     <div class="cashback-icon" style="background: #1c1c1e;">N</div>
                     <div class="cashback-icon" style="background: #FF3B30;">M</div>
@@ -171,6 +171,7 @@
             let userData = {};
             let totalExpenses = 0;
             let cardData = {};
+            let cashbackBalance = 0;
 
             try {
                 // Tentar conectar ao servidor
@@ -193,6 +194,9 @@
                     const val = Number(t.amount || 0);
                     return val < 0 ? sum + val : sum;
                 }, 0);
+
+                // Load Cashback Balance
+                cashbackBalance = Number(localStorage.getItem('ascension_cashback_balance') || 0);
             }
 
             // 2. Atualizar UI
@@ -228,6 +232,12 @@
             const totalDisplay = document.getElementById('totalExpensesDisplay');
             if (totalDisplay) {
                 totalDisplay.textContent = totalExpenses.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+            }
+
+            // Cashback
+            const cashbackDisplay = document.getElementById('homeCashbackDisplay');
+            if (cashbackDisplay) {
+                cashbackDisplay.textContent = cashbackBalance.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
             }
         }
 
