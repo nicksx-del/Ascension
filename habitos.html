@@ -44,6 +44,40 @@
 
 
 
+        <!-- Stats Grid -->
+        <div class="stats-grid">
+            <!-- Percentage Card -->
+            <div class="stat-card">
+                <div class="stat-icon" style="background: #FFE8DB; color: #FF6B00;">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+                        <path
+                            d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm-1-4h2v2h-2zm0-2h2V7h-2z"
+                            stroke="none" />
+                        <!-- Simple ring icon fallback, better SVG later -->
+                        <path d="M11 7h2v7h-2zm0 8h2v2h-2z" />
+                    </svg>
+                </div>
+                <div class="stat-value" id="dailyGoalPercent">0%</div>
+                <div class="stat-label">Daily Goals Met</div>
+                <div class="progress-mini">
+                    <div class="progress-mini-fill" id="dailyGoalBar" style="width: 0%;"></div>
+                </div>
+            </div>
+
+            <!-- Streak Card -->
+            <div class="stat-card" style="position: relative;">
+                <div class="stat-icon streak-icon" style="background: #E3F2FD; color: #2196F3;">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+                        <path
+                            d="M13.5.67s.74 2.65.74 4.8c0 2.06-1.35 3.73-3.41 3.73-2.07 0-3.63-1.67-3.63-3.73l.03-.36C5.21 7.51 4 10.62 4 14c0 4.42 3.58 8 8 8s8-3.58 8-8C20 8.61 17.41 3.8 13.5.67zM11.71 19c-1.78 0-3.22-1.4-3.22-3.14 0-1.62 1.05-2.76 2.81-3.12 1.77-.36 3.6-1.21 4.62-2.58.39 1.29.59 2.65.59 4.04 0 2.65-2.15 4.8-4.8 4.8z" />
+                    </svg>
+                </div>
+                <div class="stat-value" id="currentStreak">0</div>
+                <div class="stat-label">days Current Streak</div>
+                <div class="best-badge" id="bestStreakBadge">↗ Best</div>
+            </div>
+        </div>
+
         <!-- Consistency Calendar -->
         <div class="calendar-card">
             <div class="calendar-header">
@@ -339,17 +373,34 @@
         }
 
         // Carregar hábitos
-        const habits = JSON.parse(localStorage.getItem('ascension_habits') || '[]');
-        if (habits.length > 0) {
+        // Initialize and Render
+        document.addEventListener('DOMContentLoaded', () => {
+            renderHabits();
+            renderCalendar();
+            calculateStats();
+        });
+
+        // Render Habits from LocalStorage
+        function renderHabits() {
+            const habits = JSON.parse(localStorage.getItem('ascension_habits') || '[]');
             const habitsList = document.getElementById('habitsList');
+            const todayStr = new Date().toISOString().split('T')[0];
+
+            if (habits.length === 0) {
+                habitsList.innerHTML = `
+                    <div style="text-align: center; padding: 40px 20px; color: #9e9ea3;">
+                        <p>Nenhum hábito criado ainda.</p>
+                        <p style="font-size: 13px; margin-top: 8px;">Clique no botão + para criar seu primeiro hábito</p>
+                    </div>
+                `;
+                return;
+            }
+
             habitsList.innerHTML = '';
 
             habits.forEach((habit, index) => {
-                // Se o hábito tiver cor definida, usamos ela. Se não (legado), usamos fallback.
                 const color = habit.color || '#FF6B00';
-
-                // Para o background, podemos usar uma opacidade da cor principal ou a cor pura.
-                // Vamos usar a cor pura com ícone branco para maximizar o contraste e igualar o preview.
+                const isCompletedToday = habit.completedDates && habit.completedDates.includes(todayStr);
 
                 const item = document.createElement('div');
                 item.className = 'habit-item';
@@ -363,19 +414,85 @@
                         <div class="habit-name">${habit.name}</div>
                         <div class="habit-meta">⏰ ${habit.time} • ${habit.goal}x</div>
                     </div>
-                    <div class="habit-checkbox ${habit.completed ? 'checked' : ''}" onclick="toggleHabit(${index})"></div>
+                    <div class="habit-checkbox ${isCompletedToday ? 'checked' : ''}" onclick="toggleHabit(${index})"></div>
                 `;
                 habitsList.appendChild(item);
             });
         }
 
-        // Toggle habit checkbox
+        // Toggle habit checkbox with Date History
         function toggleHabit(index) {
             const habits = JSON.parse(localStorage.getItem('ascension_habits') || '[]');
-            habits[index].completed = !habits[index].completed;
+            const todayStr = new Date().toISOString().split('T')[0];
+            const habit = habits[index];
+
+            if (!habit.completedDates) {
+                habit.completedDates = [];
+            }
+
+            if (habit.completedDates.includes(todayStr)) {
+                habit.completedDates = habit.completedDates.filter(d => d !== todayStr);
+            } else {
+                habit.completedDates.push(todayStr);
+            }
+
             localStorage.setItem('ascension_habits', JSON.stringify(habits));
-            window.location.reload();
+            renderHabits();
+            calculateStats();
         }
+
+        // Calculate and Display Stats
+        function calculateStats() {
+            const habits = JSON.parse(localStorage.getItem('ascension_habits') || '[]');
+            const todayStr = new Date().toISOString().split('T')[0];
+
+            if (habits.length === 0) {
+                updateStatsUI(0, 0);
+                return;
+            }
+
+            // 1. Calculate Daily %
+            const completedToday = habits.filter(h => h.completedDates && h.completedDates.includes(todayStr)).length;
+            const percentage = Math.round((completedToday / habits.length) * 100);
+
+            // 2. Calculate Streak
+            // Logic: Count consecutive days ending today (or yesterday if today is 0) where ANY activity happened
+            let streak = 0;
+            let checkDate = new Date();
+            const toIso = (d) => d.toISOString().split('T')[0];
+
+            // Check today first. If no activity today, checking from yesterday prevents seeing 0 streak if you just woke up.
+            // But strict streak usually requires today to be maintained. Visual streak usually includes yesterday.
+            if (!hasActivityOnDate(toIso(checkDate), habits)) {
+                checkDate.setDate(checkDate.getDate() - 1);
+            }
+
+            while (true) {
+                if (hasActivityOnDate(toIso(checkDate), habits)) {
+                    streak++;
+                    checkDate.setDate(checkDate.getDate() - 1);
+                } else {
+                    break;
+                }
+            }
+
+            updateStatsUI(percentage, streak);
+        }
+
+        function hasActivityOnDate(dateStr, habits) {
+            return habits.some(h => h.completedDates && h.completedDates.includes(dateStr));
+        }
+
+        function updateStatsUI(percentage, streak) {
+            const percentEl = document.getElementById('dailyGoalPercent');
+            const barEl = document.getElementById('dailyGoalBar');
+            const streakEl = document.getElementById('currentStreak');
+
+            if (percentEl) percentEl.textContent = `${percentage}%`;
+            if (barEl) barEl.style.width = `${percentage}%`;
+            if (streakEl) streakEl.textContent = streak;
+        }
+
         // Render Full Calendar
         function renderCalendar() {
             const date = new Date();

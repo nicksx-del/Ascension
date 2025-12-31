@@ -164,54 +164,75 @@
         </nav>
     </div>
 
+    <script src="js/api.js"></script>
     <script>
-        // Carregar informações do usuário do localStorage
-        const userData = JSON.parse(localStorage.getItem('ascension_user') || '{}');
+        async function initApp() {
+            // 1. Tentar carregar do Backend
+            let userData = {};
+            let totalExpenses = 0;
+            let cardData = {};
 
-        if (userData.name) {
-            document.getElementById('userName').textContent = userData.name;
-            const initials = userData.name.split(' ').map(n => n[0]).join('').substring(0, 2).toUpperCase();
-            document.getElementById('userAvatar').textContent = initials;
-        }
-
-        // Se não houver usuário logado, redirecionar para login
-        if (!userData.isLoggedIn) {
-            window.location.href = 'index.html';
-        }
-
-        // Carregar dados do cartão do localStorage
-        const cardData = JSON.parse(localStorage.getItem('ascension_card') || '{}');
-
-        if (cardData.holder && cardData.lastDigits) {
-            // Atualizar o card com os dados reais
-            const cardHolderElement = document.querySelector('.card-name');
-            const cardNumberElement = document.querySelector('.card-number');
-            const configButton = document.querySelector('.card-right button');
-
-            // Mostrar nome do titular
-            cardHolderElement.textContent = cardData.holder;
-            cardHolderElement.style.color = 'white';
-
-            // Mostrar últimos 4 dígitos
-            cardNumberElement.textContent = `**** ${cardData.lastDigits}`;
-
-            // Esconder o botão de configurar
-            if (configButton) {
-                configButton.style.display = 'none';
+            try {
+                // Tentar conectar ao servidor
+                const serverUser = await API.getUser();
+                if (serverUser && serverUser.name) {
+                    userData = serverUser;
+                    const summary = await API.getSummary();
+                    totalExpenses = summary.total;
+                    console.log('📦 Dados carregados do Backend');
+                } else {
+                    throw new Error('Backend vazio ou indisponível');
+                }
+            } catch (e) {
+                console.log('⚠️ Backend offline ou vazio. Usando LocalStorage.');
+                // Fallback para LocalStorage
+                userData = JSON.parse(localStorage.getItem('ascension_user') || '{}');
+                cardData = JSON.parse(localStorage.getItem('ascension_card') || '{}');
+                const transactions = JSON.parse(localStorage.getItem('ascension_transactions') || '[]');
+                totalExpenses = transactions.reduce((sum, t) => {
+                    const val = Number(t.amount || 0);
+                    return val < 0 ? sum + val : sum;
+                }, 0);
             }
 
-            // Ajustar layout do card-right para horizontal
-            if (cardRight) {
-                cardRight.style.flexDirection = 'row';
-                cardRight.style.alignItems = 'center';
+            // 2. Atualizar UI
+
+            // User Info
+            if (userData.name) {
+                document.getElementById('userName').textContent = userData.name;
+                const initials = userData.name.split(' ').map(n => n[0]).join('').substring(0, 2).toUpperCase();
+                document.getElementById('userAvatar').textContent = initials;
+            }
+
+            // Card Info
+            if (cardData.holder) {
+                const cardHolderElement = document.querySelector('.card-name');
+                const cardNumberElement = document.querySelector('.card-number');
+                if (cardHolderElement) {
+                    cardHolderElement.textContent = cardData.holder;
+                    cardHolderElement.style.color = 'white';
+                }
+                if (cardNumberElement) cardNumberElement.textContent = `**** ${cardData.lastDigits}`;
+
+                const configBtn = document.querySelector('.card-right button');
+                if (configBtn) configBtn.style.display = 'none';
+
+                const cardRight = document.querySelector('.card-right');
+                if (cardRight) {
+                    cardRight.style.flexDirection = 'row';
+                    cardRight.style.alignItems = 'center';
+                }
+            }
+
+            // Total Expenses
+            const totalDisplay = document.getElementById('totalExpensesDisplay');
+            if (totalDisplay) {
+                totalDisplay.textContent = totalExpenses.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
             }
         }
 
-        // Calcular e exibir "Gasto Total"
-        const transactions = JSON.parse(localStorage.getItem('ascension_transactions') || '[]');
-        const totalExpenses = transactions.reduce((sum, t) => sum + Number(t.amount || 0), 0);
-
-        document.getElementById('totalExpensesDisplay').textContent = totalExpenses.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+        // Iniciar
+        initApp();
     </script>
 </body>
 
