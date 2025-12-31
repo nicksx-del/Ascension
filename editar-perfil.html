@@ -1,0 +1,477 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Editar Perfil - Ascension</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap"
+        rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: #fcfcfc;
+            min-height: 100vh;
+            color: #1d1d1f;
+        }
+
+        .container {
+            max-width: 450px;
+            margin: 0 auto;
+            padding: 24px 24px 40px;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Header */
+        .header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 40px;
+            position: relative;
+        }
+
+        .back-button {
+            border: none;
+            background: none;
+            padding: 8px;
+            margin-left: -8px;
+            cursor: pointer;
+            color: #1d1d1f;
+        }
+
+        .page-title {
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 18px;
+            font-weight: 700;
+            color: #1d1d1f;
+        }
+
+        /* Avatar Section */
+        .avatar-section {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-bottom: 40px;
+        }
+
+        .avatar-container {
+            position: relative;
+            width: 140px;
+            height: 140px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 16px;
+        }
+
+        .dashed-ring {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            border: 2px dashed #FFD4BE;
+            border-radius: 50%;
+        }
+
+        .avatar-circle {
+            width: 110px;
+            height: 110px;
+            background: #F5DCC8;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 4px solid white;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+            overflow: hidden;
+            z-index: 1;
+        }
+
+        .avatar-circle svg {
+            width: 60px;
+            height: 60px;
+            fill: white;
+            opacity: 0.9;
+        }
+
+        .camera-badge {
+            position: absolute;
+            bottom: 15px;
+            right: 15px;
+            width: 36px;
+            height: 36px;
+            background: #FF6B00;
+            border: 3px solid white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            z-index: 2;
+            cursor: pointer;
+            box-shadow: 0 2px 8px rgba(255, 107, 0, 0.2);
+        }
+
+        .change-photo-text {
+            font-size: 14px;
+            font-weight: 500;
+            color: #FF6B00;
+        }
+
+        /* Form */
+        .form-group {
+            margin-bottom: 24px;
+        }
+
+        .input-label {
+            display: block;
+            font-size: 12px;
+            font-weight: 600;
+            color: #9e9ea3;
+            margin-bottom: 10px;
+        }
+
+        .input-wrapper {
+            position: relative;
+            display: flex;
+            align-items: center;
+        }
+
+        .input-icon {
+            position: absolute;
+            left: 20px;
+            color: #9e9ea3;
+            width: 20px;
+            height: 20px;
+        }
+
+        .input-icon svg {
+            width: 20px;
+            height: 20px;
+            fill: currentColor;
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 18px 20px 18px 52px;
+            border: 1px solid #f0f0f0;
+            border-radius: 100px;
+            font-size: 15px;
+            font-weight: 500;
+            color: #1d1d1f;
+            outline: none;
+            background: white;
+            transition: all 0.2s ease;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.02);
+        }
+
+        .form-input:focus {
+            border-color: #FF6B00;
+            background: white;
+        }
+
+        .password-toggle {
+            position: absolute;
+            right: 20px;
+            background: none;
+            border: none;
+            color: #9e9ea3;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+        }
+
+        .forgot-password {
+            display: block;
+            text-align: right;
+            font-size: 13px;
+            color: #FF6B00;
+            text-decoration: none;
+            font-weight: 500;
+            margin-top: -12px;
+            margin-bottom: 40px;
+        }
+
+        /* Footer Actions */
+        .footer-actions {
+            margin-top: auto;
+        }
+
+        .save-btn {
+            width: 100%;
+            background: #FF6B00;
+            color: white;
+            border: none;
+            padding: 18px;
+            border-radius: 100px;
+            font-size: 16px;
+            font-weight: 700;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            margin-bottom: 20px;
+            box-shadow: 0 8px 20px rgba(255, 107, 0, 0.25);
+            transition: transform 0.1s ease;
+        }
+
+        .save-btn:active {
+            transform: scale(0.98);
+        }
+
+        .cancel-btn {
+            display: block;
+            width: 100%;
+            text-align: center;
+            background: none;
+            border: none;
+            color: #9e9ea3;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        /* Animations */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .header {
+            animation: fadeInUp 0.6s ease-out backwards;
+        }
+
+        .avatar-section {
+            animation: fadeInUp 0.6s ease-out 0.1s backwards;
+        }
+
+        .form-group:nth-child(1) {
+            animation: fadeInUp 0.6s ease-out 0.2s backwards;
+        }
+
+        .form-group:nth-child(2) {
+            animation: fadeInUp 0.6s ease-out 0.3s backwards;
+        }
+
+        .form-group:nth-child(3) {
+            animation: fadeInUp 0.6s ease-out 0.4s backwards;
+        }
+
+        .forgot-password {
+            animation: fadeInUp 0.6s ease-out 0.5s backwards;
+        }
+
+        .footer-actions {
+            animation: fadeInUp 0.6s ease-out 0.6s backwards;
+        }
+
+        /* Hover Effects */
+        .avatar-container:hover .camera-badge {
+            transform: scale(1.1);
+            background: #FF8533;
+        }
+
+        .camera-badge {
+            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        .form-input:hover {
+            border-color: #e0e0e0;
+            background: #fafafa;
+        }
+
+        .form-input:focus {
+            background: white;
+            box-shadow: 0 4px 20px rgba(255, 107, 0, 0.15);
+            transform: translateY(-2px);
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <!-- Header -->
+        <header class="header">
+            <button class="back-button" onclick="history.back()">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z" />
+                </svg>
+            </button>
+            <h1 class="page-title">Editar Perfil</h1>
+            <div style="width: 24px;"></div> <!-- Spacer for centering -->
+        </header>
+
+        <!-- Avatar Form -->
+        <div class="avatar-section">
+            <div class="avatar-container" onclick="document.getElementById('photoInput').click()">
+                <div class="dashed-ring"></div>
+                <div class="avatar-circle">
+                    <svg viewBox="0 0 24 24">
+                        <path
+                            d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z" />
+                    </svg>
+                </div>
+                <div class="camera-badge">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+                        <path
+                            d="M9 2L7.17 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2h-3.17L15 2H9zm3 15c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5z" />
+                    </svg>
+                </div>
+            </div>
+            <input type="file" id="photoInput" accept="image/*">
+            <span class="change-photo-text">Alterar foto de perfil</span>
+        </div>
+
+        <form id="editProfileForm" onsubmit="handleSave(event)">
+            <!-- Nome -->
+            <div class="form-group">
+                <label class="input-label">Nome Completo</label>
+                <div class="input-wrapper">
+                    <div class="input-icon">
+                        <svg viewBox="0 0 24 24">
+                            <path
+                                d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z" />
+                        </svg>
+                    </div>
+                    <input type="text" id="fullname" class="form-input" required>
+                </div>
+            </div>
+
+            <!-- Email -->
+            <div class="form-group">
+                <label class="input-label">E-mail</label>
+                <div class="input-wrapper">
+                    <div class="input-icon">
+                        <svg viewBox="0 0 24 24">
+                            <path
+                                d="M20 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z" />
+                        </svg>
+                    </div>
+                    <input type="email" id="email" class="form-input" required>
+                </div>
+            </div>
+
+            <!-- Senha -->
+            <div class="form-group">
+                <label class="input-label">Senha</label>
+                <div class="input-wrapper">
+                    <div class="input-icon">
+                        <svg viewBox="0 0 24 24">
+                            <path
+                                d="M18 8h-1V6c0-2.76-2.24-5-5-5S7 3.24 7 6v2H6c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V10c0-1.1-.9-2-2-2zm-6 9c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2zm3.1-9H8.9V6c0-1.71 1.39-3.1 3.1-3.1 1.71 0 3.1 1.39 3.1 3.1v2z" />
+                        </svg>
+                    </div>
+                    <input type="password" id="password" class="form-input" value="password123">
+                    <button type="button" class="password-toggle" onclick="togglePassword()">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" id="eyeIcon">
+                            <path
+                                d="M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5zM12 17c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5zm0-8c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z" />
+                        </svg>
+                    </button>
+                </div>
+            </div>
+
+            <a href="#" class="forgot-password">Esqueceu sua senha?</a>
+
+            <div class="footer-actions">
+                <button type="submit" class="save-btn">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                        <path
+                            d="M17 3H5c-1.11 0-2 .9-2 2v14c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V7l-4-4zm-5 16c-1.66 0-3-1.34-3-3s1.34-3 3 3 3 1.34 3 3-1.34-3-3-3zm3-10H5V5h10v4z" />
+                    </svg>
+                    Salvar Alterações
+                </button>
+                <button type="button" class="cancel-btn" onclick="history.back()">Cancelar</button>
+            </div>
+        </form>
+    </div>
+
+    <script>
+        // Load initial data
+        const userData = JSON.parse(localStorage.getItem('ascension_user') || '{}');
+        const defaultData = {
+            name: 'Alex Morgan',
+            email: 'alex.morgan@example.com'
+        };
+
+        document.getElementById('fullname').value = userData.name || defaultData.name;
+        document.getElementById('email').value = userData.email || defaultData.email;
+
+        // Toggle Password Visibility
+        function togglePassword() {
+            const input = document.getElementById('password');
+            const icon = document.getElementById('eyeIcon');
+
+            if (input.type === 'password') {
+                input.type = 'text';
+                // Eye slashed logic or different icon could go here, simplified for now
+                icon.style.opacity = '0.7';
+            } else {
+                input.type = 'password';
+                icon.style.opacity = '1';
+            }
+        }
+
+        // Handle Save
+        function handleSave(event) {
+            event.preventDefault();
+
+            const name = document.getElementById('fullname').value;
+            const email = document.getElementById('email').value;
+            // Password handling would typically involve validation and hashing, simplified here
+
+            const updatedUser = {
+                ...userData,
+                name: name,
+                email: email
+            };
+
+            localStorage.setItem('ascension_user', JSON.stringify(updatedUser));
+
+            // Show success feedback slightly before redirecting
+            const btn = document.querySelector('.save-btn');
+            const originalText = btn.innerHTML;
+            btn.innerHTML = 'Salvo!';
+            btn.style.background = '#00C853';
+
+            setTimeout(() => {
+                window.location.href = 'perfil.html';
+            }, 600);
+        }
+
+        // Handle photo selection (visual feedback only for this demo)
+        document.getElementById('photoInput').addEventListener('change', function (e) {
+            if (e.target.files && e.target.files[0]) {
+                const reader = new FileReader();
+                reader.onload = function (e) {
+                    // In a real app we'd update the src of an img tag inside avatar-circle
+                    // keeping structure simple for demo
+                    alert('Foto selecionada! (Simulação)');
+                }
+                reader.readAsDataURL(e.target.files[0]);
+            }
+        });
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,504 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Novo Registro - Ascension</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap"
+        rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: #f0f0f2;
+            min-height: 100vh;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            padding-bottom: 80px;
+        }
+
+        .container {
+            max-width: 450px;
+            margin: 0 auto;
+            background: #f0f0f2;
+            min-height: 100vh;
+            position: relative;
+        }
+
+        /* Status Bar */
+        .status-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px 20px;
+            font-size: 14px;
+            font-weight: 600;
+            color: #1d1d1f;
+        }
+
+        .status-icons {
+            display: flex;
+            gap: 6px;
+            align-items: center;
+        }
+
+        .status-icons svg {
+            width: 16px;
+            height: 16px;
+        }
+
+        /* Header */
+        .header {
+            display: flex;
+            align-items: center;
+            padding: 20px;
+            gap: 16px;
+        }
+
+        .back-button {
+            width: 40px;
+            height: 40px;
+            background: white;
+            border: none;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+            transition: all 0.2s ease;
+        }
+
+        .back-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        .back-button svg {
+            width: 20px;
+            height: 20px;
+            fill: #1d1d1f;
+        }
+
+        .page-title {
+            font-size: 20px;
+            font-weight: 800;
+            color: #1d1d1f;
+            flex: 1;
+            text-align: center;
+            margin-right: 40px;
+        }
+
+        /* Form */
+        .form-container {
+            padding: 0 20px;
+        }
+
+        .form-group {
+            margin-bottom: 24px;
+        }
+
+        .form-label {
+            font-size: 11px;
+            font-weight: 700;
+            color: #9e9ea3;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 12px;
+            display: block;
+        }
+
+        .input-wrapper {
+            position: relative;
+        }
+
+        .input-icon {
+            position: absolute;
+            left: 20px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 20px;
+            height: 20px;
+            opacity: 0.4;
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 20px 20px;
+            background: white;
+            border: none;
+            border-radius: 16px;
+            font-size: 20px;
+            font-family: 'Inter', sans-serif;
+            color: #1d1d1f;
+            font-weight: 700;
+            outline: none;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+        }
+
+        .form-input.with-icon {
+            padding-left: 52px;
+        }
+
+        .form-input::placeholder {
+            color: #d1d1d6;
+        }
+
+        .form-input.amount {
+            color: #d1d1d6;
+        }
+
+        .form-select {
+            width: 100%;
+            padding: 20px 48px 20px 52px;
+            background: white;
+            border: none;
+            border-radius: 16px;
+            font-size: 16px;
+            font-family: 'Inter', sans-serif;
+            color: #1d1d1f;
+            font-weight: 600;
+            outline: none;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+            appearance: none;
+            cursor: pointer;
+        }
+
+        .dropdown-arrow {
+            position: absolute;
+            right: 20px;
+            top: 50%;
+            transform: translateY(-50%);
+            pointer-events: none;
+        }
+
+        .dropdown-arrow svg {
+            width: 20px;
+            height: 20px;
+            opacity: 0.4;
+        }
+
+        /* Two Column Layout */
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+        }
+
+        .form-input[type="date"] {
+            font-size: 16px;
+            font-weight: 600;
+            color: #9e9ea3;
+        }
+
+        /* Submit Button */
+        .submit-button {
+            background: linear-gradient(135deg, #FF6B00 0%, #FF8533 100%);
+            color: white;
+            border: none;
+            border-radius: 100px;
+            padding: 20px 40px;
+            font-size: 17px;
+            font-weight: 700;
+            width: calc(100% - 40px);
+            cursor: pointer;
+            box-shadow: 0 8px 24px rgba(255, 107, 0, 0.25);
+            transition: all 0.2s ease;
+            margin: 40px 20px 120px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .submit-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 12px 32px rgba(255, 107, 0, 0.3);
+        }
+
+        .submit-button:active {
+            transform: translateY(0);
+        }
+
+        .submit-button svg {
+            width: 20px;
+            height: 20px;
+        }
+
+        /* Bottom Navigation */
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: white;
+            border-top: 1px solid #e5e5ea;
+            display: flex;
+            padding: 12px 20px 20px;
+            justify-content: space-around;
+            max-width: 450px;
+            margin: 0 auto;
+        }
+
+        .nav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 4px;
+            text-decoration: none;
+            color: #9e9ea3;
+            font-size: 11px;
+            font-weight: 600;
+            transition: all 0.2s ease;
+            position: relative;
+        }
+
+        .nav-item.active {
+            color: #FF6B00;
+        }
+
+        .nav-item svg {
+            width: 24px;
+            height: 24px;
+        }
+
+        .nav-item .badge {
+            position: absolute;
+            top: -2px;
+            right: -6px;
+            width: 8px;
+            height: 8px;
+            background: #FF3B30;
+            border-radius: 50%;
+            border: 2px solid white;
+        }
+
+        .nav-item.active svg {
+            fill: #FF6B00;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+
+        <!-- Header -->
+        <div class="header">
+            <button class="back-button" onclick="window.location.href='home.html'">
+                <svg fill="currentColor" viewBox="0 0 24 24">
+                    <path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z" />
+                </svg>
+            </button>
+            <h1 class="page-title">Novo Registro</h1>
+        </div>
+
+        <!-- Form -->
+        <form class="form-container" onsubmit="handleSubmit(event)">
+            <div class="form-group">
+                <label class="form-label">VALOR</label>
+                <input type="text" class="form-input amount" value="R$ 0,00" id="amount"
+                    onfocus="if(this.value == 'R$ 0,00') this.value='R$ '">
+            </div>
+
+            <div class="form-group">
+                <label class="form-label">NOME DO ITEM</label>
+                <div class="input-wrapper">
+                    <svg class="input-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                        stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"></path>
+                        <line x1="3" y1="6" x2="21" y2="6"></line>
+                        <path d="M16 10a4 4 0 0 1-8 0"></path>
+                    </svg>
+                    <input type="text" class="form-input with-icon" placeholder="Ex: Supermercado" id="itemName">
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="form-label">CATEGORIA</label>
+                <div class="input-wrapper">
+                    <svg class="input-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                        stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                        <circle cx="12" cy="7" r="4"></circle>
+                    </svg>
+                    <select class="form-select" id="category">
+                        <option value="">Selecione</option>
+                        <option value="alimentacao">Alimentação</option>
+                        <option value="transporte">Transporte</option>
+                        <option value="saude">Saúde</option>
+                        <option value="lazer">Lazer</option>
+                        <option value="educacao">Educação</option>
+                        <option value="outros">Outros</option>
+                    </select>
+                    <div class="dropdown-arrow">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                            stroke-linecap="round" stroke-linejoin="round">
+                            <polyline points="6 9 12 15 18 9"></polyline>
+                        </svg>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-row">
+                <div class="form-group">
+                    <label class="form-label">DATA</label>
+                    <input type="date" class="form-input" id="date">
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">PAGAMENTO</label>
+                    <div class="input-wrapper">
+                        <select class="form-select" id="payment" style="padding-left: 20px;">
+                            <option value="credito">Crédito</option>
+                            <option value="debito">Débito</option>
+                            <option value="dinheiro">Dinheiro</option>
+                            <option value="pix">PIX</option>
+                        </select>
+                        <div class="dropdown-arrow">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                                stroke-linecap="round" stroke-linejoin="round">
+                                <polyline points="6 9 12 15 18 9"></polyline>
+                            </svg>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <button type="submit" class="submit-button">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"
+                    stroke-linejoin="round">
+                    <line x1="12" y1="5" x2="12" y2="19"></line>
+                    <line x1="5" y1="12" x2="19" y2="12"></line>
+                </svg>
+                Adicionar Registro
+            </button>
+        </form>
+
+        <!-- Bottom Navigation -->
+        <nav class="bottom-nav">
+            <a href="home.html" class="nav-item">
+                <svg fill="currentColor" viewBox="0 0 24 24">
+                    <path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z" />
+                </svg>
+                <span>Início</span>
+            </a>
+            <a href="#" class="nav-item active">
+                <svg fill="currentColor" viewBox="0 0 24 24">
+                    <path
+                        d="M20 4H4c-1.11 0-1.99.89-1.99 2L2 18c0 1.11.89 2 2 2h16c1.11 0 2-.89 2-2V6c0-1.11-.89-2-2-2zm0 14H4v-6h16v6zm0-10H4V6h16v2z" />
+                </svg>
+                <span>Pagar</span>
+            </a>
+            <a href="#" class="nav-item">
+                <svg fill="currentColor" viewBox="0 0 24 24">
+                    <path
+                        d="M20 2H4c-1.1 0-1.99.9-1.99 2L2 22l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm-2 12H6v-2h12v2zm0-3H6V9h12v2zm0-3H6V6h12v2z" />
+                </svg>
+                <span>Msg</span>
+                <span class="badge"></span>
+            </a>
+            <a href="#" class="nav-item">
+                <svg fill="currentColor" viewBox="0 0 24 24">
+                    <path
+                        d="M6 10c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm12 0c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm-6 0c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z" />
+                </svg>
+                <span>Mais</span>
+            </a>
+        </nav>
+    </div>
+
+    <script>
+        // Definir data de hoje como padrão
+        const today = new Date().toISOString().split('T')[0];
+        document.getElementById('date').value = today;
+
+        // Verificar se está em modo de edição
+        const editData = JSON.parse(localStorage.getItem('ascension_edit_transaction') || 'null');
+        let editMode = false;
+
+        if (editData) {
+            editMode = true;
+
+            // Preencher formulário com dados existentes
+            document.getElementById('amount').value = editData.data.amount;
+            document.getElementById('itemName').value = editData.data.itemName;
+            document.getElementById('category').value = editData.data.category;
+            document.getElementById('date').value = editData.data.date;
+            document.getElementById('payment').value = editData.data.payment;
+
+            // Atualizar título e botão
+            document.querySelector('.page-title').textContent = 'Editar Registro';
+            document.querySelector('.submit-button').innerHTML = `
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+                    <polyline points="20 6 9 17 4 12"></polyline>
+                </svg>
+                Salvar Alterações
+            `;
+        }
+
+        function handleSubmit(event) {
+            event.preventDefault();
+
+            const amount = document.getElementById('amount').value;
+            const itemName = document.getElementById('itemName').value;
+            const category = document.getElementById('category').value;
+            const date = document.getElementById('date').value;
+            const payment = document.getElementById('payment').value;
+
+            if (!itemName || !category) {
+                alert('Por favor, preencha todos os campos obrigatórios!');
+                return;
+            }
+
+            const transaction = {
+                amount,
+                itemName,
+                category,
+                date,
+                payment,
+                timestamp: editMode ? editData.data.timestamp : new Date().toISOString()
+            };
+
+            // Buscar transações existentes
+            const transactions = JSON.parse(localStorage.getItem('ascension_transactions') || '[]');
+
+            if (editMode) {
+                // Atualizar transação existente
+                transactions[editData.index] = transaction;
+                localStorage.removeItem('ascension_edit_transaction');
+            } else {
+                // Adicionar nova transação
+                transactions.push(transaction);
+            }
+
+            localStorage.setItem('ascension_transactions', JSON.stringify(transactions));
+
+            // Redirecionar de volta para gastos se estava editando, senão para home
+            window.location.href = editMode ? 'gastos.html' : 'home.html';
+        }
+
+        // Formatar valor monetário
+        const amountInput = document.getElementById('amount');
+        amountInput.addEventListener('input', function (e) {
+            let value = e.target.value.replace(/\D/g, '');
+            if (value === '') {
+                e.target.value = 'R$ 0,00';
+                return;
+            }
+            value = value.padStart(3, '0');
+            const cents = value.slice(-2);
+            const reais = value.slice(0, -2);
+            e.target.value = `R$ ${parseInt(reais).toLocaleString('pt-BR')},${cents}`;
+        });
+    </script>
+</body>
+
+</html>

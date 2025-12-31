@@ -1,0 +1,440 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hábitos - Ascension</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+    <style>
+        /* Page specific overrides */
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <!-- Header -->
+        <div class="header">
+            <div class="user-info">
+                <div class="avatar" id="userAvatar">AM</div>
+                <div class="user-text">
+                    <span class="greeting">Welcome back,</span>
+                    <span class="user-name" id="userName">Alex Morgan</span>
+                </div>
+            </div>
+            <div class="header-actions">
+                <button class="icon-button">
+                    <svg fill="currentColor" viewBox="0 0 24 24">
+                        <path
+                            d="M20 3h-1V1h-2v2H7V1H5v2H4c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 18H4V8h16v13z" />
+                    </svg>
+                </button>
+                <button class="icon-button">
+                    <svg fill="currentColor" viewBox="0 0 24 24">
+                        <path
+                            d="M12 22c1.1 0 2-.9 2-2h-4c0 1.1.9 2 2 2zm6-6v-5c0-3.07-1.63-5.64-4.5-6.32V4c0-.83-.67-1.5-1.5-1.5s-1.5.67-1.5 1.5v.68C7.64 5.36 6 7.92 6 11v5l-2 2v1h16v-1l-2-2z" />
+                    </svg>
+                </button>
+            </div>
+        </div>
+
+
+
+        <!-- Consistency Calendar -->
+        <div class="calendar-card">
+            <div class="calendar-header">
+                <div>
+                    <div class="calendar-title">Consistency</div>
+                    <div class="calendar-subtitle">November Progress</div>
+                </div>
+                <div class="calendar-nav">
+                    <button class="nav-arrow">‹</button>
+                    <button class="nav-arrow">›</button>
+                </div>
+            </div>
+
+            <div class="calendar">
+                <div class="calendar-weekdays">
+                    <div class="weekday">S</div>
+                    <div class="weekday">M</div>
+                    <div class="weekday">T</div>
+                    <div class="weekday">W</div>
+                    <div class="weekday">T</div>
+                    <div class="weekday">F</div>
+                    <div class="weekday">S</div>
+                </div>
+                <div class="calendar-days">
+                    <div class="day empty">29</div>
+                    <div class="day empty">30</div>
+                    <div class="day empty">31</div>
+                    <div class="day partial">1</div>
+                    <div class="day active">2</div>
+                    <div class="day active">3</div>
+                    <div class="day active">4</div>
+
+                    <div class="day completed">5</div>
+                    <div class="day active">6</div>
+                    <div class="day active">7</div>
+                    <div class="day partial">8</div>
+                    <div class="day active">9</div>
+                    <div class="day completed">10</div>
+                    <div class="day active">11</div>
+
+                    <div class="day completed">12</div>
+                    <div class="day active">13</div>
+                    <div class="day active">14</div>
+                    <div class="day completed">15</div>
+                    <div class="day completed">16</div>
+                    <div class="day completed">17</div>
+                    <div class="day current">18</div>
+
+                    <div class="day inactive">19</div>
+                    <div class="day inactive">20</div>
+                    <div class="day inactive">21</div>
+                    <div class="day empty">22</div>
+                    <div class="day empty">23</div>
+                    <div class="day empty">24</div>
+                    <div class="day empty">25</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Habits Section -->
+        <div class="habits-header">
+            <h2 class="habits-title">Today's Habits</h2>
+            <button class="filter-button" onclick="openFilterModal()"
+                style="background: none; border: none; cursor: pointer;">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M3 18h6v-2H3v2zM3 6v2h18V6H3zm0 7h12v-2H3v2z" />
+                </svg>
+                Filter
+            </button>
+        </div>
+
+        <!-- Habits List -->
+        <div class="habits-list" id="habitsList">
+            <div style="text-align: center; padding: 40px 20px; color: #9e9ea3;">
+                <p>Nenhum hábito criado ainda.</p>
+                <p style="font-size: 13px; margin-top: 8px;">Clique no botão + para criar seu primeiro hábito</p>
+            </div>
+        </div>
+
+        <!-- FAB Button -->
+        <button class="fab" onclick="window.location.href='novo-habito.html'">+</button>
+
+        <!-- Bottom Navigation -->
+        <nav class="bottom-nav">
+            <a href="home.html" class="nav-item">
+                <svg fill="currentColor" viewBox="0 0 24 24">
+                    <path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z" />
+                </svg>
+                <span>Home</span>
+            </a>
+            <a href="habitos.html" class="nav-item active">
+                <svg fill="currentColor" viewBox="0 0 24 24">
+                    <path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z" />
+                </svg>
+                <span>Habits</span>
+            </a>
+            <a href="#" class="nav-item">
+                <svg fill="currentColor" viewBox="0 0 24 24">
+                    <path
+                        d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zM9 17H7v-7h2v7zm4 0h-2V7h2v10zm4 0h-2v-4h2v4z" />
+                </svg>
+                <span>Stats</span>
+            </a>
+            <a href="perfil.html" class="nav-item">
+                <svg fill="currentColor" viewBox="0 0 24 24">
+                    <path
+                        d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z" />
+                </svg>
+                <span>Perfil</span>
+            </a>
+        </nav>
+    </div>
+
+    <!-- Filter Modal Overlay -->
+    <div class="modal-overlay" id="modalOverlay" onclick="closeFilterModal()"></div>
+
+    <!-- Filter Modal -->
+    <div class="filter-modal" id="filterModal">
+        <div class="modal-header">
+            <div class="modal-drag-indicator"></div>
+            <button class="modal-action" onclick="closeFilterModal()">Cancel</button>
+            <div class="modal-title">Filter Habits</div>
+            <button class="modal-action reset" onclick="resetFilters()">Reset</button>
+        </div>
+
+        <div class="filter-section">
+            <label class="filter-label">Sort By</label>
+            <div class="filter-chips">
+                <div class="chip active" onclick="selectChip(this)">Time</div>
+                <div class="chip" onclick="selectChip(this)">Priority</div>
+                <div class="chip" onclick="selectChip(this)">Name</div>
+            </div>
+        </div>
+
+        <div class="filter-section">
+            <label class="filter-label">Categories</label>
+            <div class="filter-chips">
+                <div class="chip active" onclick="selectChip(this)">All</div>
+                <div class="chip" onclick="selectChip(this)">
+                    <svg viewBox="0 0 24 24">
+                        <path
+                            d="M18 2H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zM6 4h5v8l-2.5-1.5L6 12V4z" />
+                    </svg>
+                    Learning
+                </div>
+                <div class="chip" onclick="selectChip(this)">
+                    <svg viewBox="0 0 24 24">
+                        <path
+                            d="M13.5.67s.74 2.65.74 4.8c0 2.06-1.35 3.73-3.41 3.73-2.07 0-3.63-1.67-3.63-3.73l.03-.36C5.21 7.51 4 10.62 4 14c0 4.42 3.58 8 8 8s8-3.58 8-8C20 8.61 17.41 3.8 13.5.67zM11.71 19c-1.78 0-3.22-1.4-3.22-3.14 0-1.62 1.05-2.76 2.81-3.12 1.77-.36 3.6-1.21 4.62-2.58.39 1.29.59 2.65.59 4.04 0 2.65-2.15 4.8-4.8 4.8z" />
+                    </svg>
+                    Health
+                </div>
+                <div class="chip" onclick="selectChip(this)">
+                    <svg viewBox="0 0 24 24">
+                        <path
+                            d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 14h-2v-2h2v2zm0-4h-2V7h2v5z" />
+                    </svg>
+                    Mindfulness
+                </div>
+            </div>
+        </div>
+
+        <div class="filter-section">
+            <label class="filter-label">Completion Status</label>
+
+            <div class="toggle-row">
+                <div class="toggle-info">
+                    <div class="toggle-icon">
+                        <svg viewBox="0 0 24 24" style="width: 20px; height: 20px; fill: #00C853;">
+                            <path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z" />
+                        </svg>
+                    </div>
+                    <span class="toggle-text">Completed</span>
+                </div>
+                <div class="toggle-switch-filter" onclick="toggleFilter(this)">
+                    <div class="toggle-knob-filter"></div>
+                </div>
+            </div>
+
+            <div class="toggle-row">
+                <div class="toggle-info">
+                    <div class="toggle-icon" style="color: #9e9ea3;">
+                        <svg viewBox="0 0 24 24" style="width: 20px; height: 20px; fill: #9e9ea3;">
+                            <path
+                                d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 14h-2v-2h2v2zm0-4h-2V7h2v5z" />
+                        </svg>
+                    </div>
+                    <span class="toggle-text">Pending</span>
+                </div>
+                <!-- Pending is active in the image -->
+                <div class="toggle-switch-filter active" onclick="toggleFilter(this)">
+                    <div class="toggle-knob-filter"></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="filter-section">
+            <label class="filter-label">Priority</label>
+            <div class="priority-row">
+                <!-- High active (red) -->
+                <div class="priority-chip active" style="color: #ff3b30; border-color: #ff3b30; background: #FFEBEE;"
+                    onclick="selectPriority(this)">
+                    <div class="priority-dot" style="background: #ff3b30;"></div>
+                    High
+                </div>
+                <div class="priority-chip" onclick="selectPriority(this)">
+                    <div class="priority-dot" style="background: #FF9800;"></div>
+                    Medium
+                </div>
+                <div class="priority-chip" onclick="selectPriority(this)">
+                    <div class="priority-dot" style="background: #4CAF50;"></div>
+                    Low
+                </div>
+            </div>
+        </div>
+
+        <button class="apply-btn" onclick="closeFilterModal()">
+            Apply Filters <span class="badge-count">4</span>
+        </button>
+    </div>
+
+    <script>
+        // Modal functions
+        function openFilterModal() {
+            document.getElementById('modalOverlay').classList.add('active');
+            document.getElementById('filterModal').classList.add('active');
+        }
+
+        function closeFilterModal() {
+            document.getElementById('modalOverlay').classList.remove('active');
+            document.getElementById('filterModal').classList.remove('active');
+        }
+
+        function toggleFilter(el) {
+            el.classList.toggle('active');
+        }
+
+        function selectChip(el) {
+            const parent = el.parentElement;
+            parent.querySelectorAll('.chip').forEach(c => c.classList.remove('active'));
+            el.classList.add('active');
+        }
+
+        function selectPriority(el) {
+            // Priority selection logic (single select for now based on UI)
+            const parent = el.parentElement;
+            parent.querySelectorAll('.priority-chip').forEach(c => {
+                c.classList.remove('active');
+                c.style.background = 'white';
+                c.style.borderColor = '#e5e5ea';
+                c.style.color = '#1d1d1f';
+            });
+
+            el.classList.add('active');
+
+            // Restore specific colors based on priority
+            const dot = el.querySelector('.priority-dot');
+            const color = dot.style.backgroundColor; // rgb(...)
+
+            // Map simple color match or just re-apply inline logic
+            // Hacky but works for demo
+            if (el.textContent.trim() === 'High') {
+                el.style.color = '#ff3b30';
+                el.style.borderColor = '#ff3b30';
+                el.style.background = '#FFEBEE';
+            } else if (el.textContent.trim() === 'Medium') {
+                el.style.color = '#FF9800';
+                el.style.borderColor = '#FF9800';
+                el.style.background = '#FFF3E0';
+            } else {
+                el.style.color = '#4CAF50';
+                el.style.borderColor = '#4CAF50';
+                el.style.background = '#E8F5E9';
+            }
+        }
+
+        function resetFilters() {
+            // Reset logic mockup
+            document.querySelectorAll('.toggle-switch-filter').forEach(t => t.classList.remove('active'));
+            // Reset chips to first child
+            document.querySelectorAll('.filter-chips').forEach(container => {
+                container.querySelectorAll('.chip').forEach(c => c.classList.remove('active'));
+                container.firstElementChild.classList.add('active');
+            });
+        }
+
+        // Carregar dados do usuário
+        const userData = JSON.parse(localStorage.getItem('ascension_user') || '{}');
+        if (userData.name) {
+            document.getElementById('userName').textContent = userData.name;
+            const initials = userData.name.split(' ').map(n => n[0]).join('').substring(0, 2).toUpperCase();
+            document.getElementById('userAvatar').textContent = initials;
+        }
+
+        // Carregar hábitos
+        const habits = JSON.parse(localStorage.getItem('ascension_habits') || '[]');
+        if (habits.length > 0) {
+            const habitsList = document.getElementById('habitsList');
+            habitsList.innerHTML = '';
+
+            habits.forEach((habit, index) => {
+                // Se o hábito tiver cor definida, usamos ela. Se não (legado), usamos fallback.
+                const color = habit.color || '#FF6B00';
+
+                // Para o background, podemos usar uma opacidade da cor principal ou a cor pura.
+                // Vamos usar a cor pura com ícone branco para maximizar o contraste e igualar o preview.
+
+                const item = document.createElement('div');
+                item.className = 'habit-item';
+                item.innerHTML = `
+                    <div class="habit-icon" style="background: ${color}; color: white; border-radius: 12px; width: 40px; height: 40px; display: flex; align-items: center; justify-content: center;">
+                        <div style="width: 20px; height: 20px; fill: currentColor;">
+                            ${habit.icon}
+                        </div>
+                    </div>
+                    <div class="habit-info">
+                        <div class="habit-name">${habit.name}</div>
+                        <div class="habit-meta">⏰ ${habit.time} • ${habit.goal}x</div>
+                    </div>
+                    <div class="habit-checkbox ${habit.completed ? 'checked' : ''}" onclick="toggleHabit(${index})"></div>
+                `;
+                habitsList.appendChild(item);
+            });
+        }
+
+        // Toggle habit checkbox
+        function toggleHabit(index) {
+            const habits = JSON.parse(localStorage.getItem('ascension_habits') || '[]');
+            habits[index].completed = !habits[index].completed;
+            localStorage.setItem('ascension_habits', JSON.stringify(habits));
+            window.location.reload();
+        }
+        // Render Full Calendar
+        function renderCalendar() {
+            const date = new Date();
+            const month = date.getMonth();
+            const year = date.getFullYear();
+
+            const monthNames = ["January", "February", "March", "April", "May", "June",
+                "July", "August", "September", "October", "November", "December"
+            ];
+
+            // Update Header
+            document.querySelector('.calendar-title').textContent = 'Calendar';
+            document.querySelector('.calendar-subtitle').textContent = `${monthNames[month]} ${year}`;
+
+            // Get first day of month and total days
+            const firstDay = new Date(year, month, 1).getDay();
+            const daysInMonth = new Date(year, month + 1, 0).getDate();
+            const today = date.getDate();
+
+            const calendarDays = document.querySelector('.calendar-days');
+            calendarDays.innerHTML = '';
+
+            // Empty slots for days before start of month
+            for (let i = 0; i < firstDay; i++) {
+                const emptyDay = document.createElement('div');
+                emptyDay.className = 'day empty';
+                calendarDays.appendChild(emptyDay);
+            }
+
+            // Days of the month
+            for (let i = 1; i <= daysInMonth; i++) {
+                const dayEl = document.createElement('div');
+                dayEl.className = 'day';
+                dayEl.textContent = i;
+
+                if (i === today) {
+                    dayEl.classList.add('current'); // Black background for today
+                } else if (i < today) {
+                    // Randomly assign status for demo purposes since we don't have historical data
+                    const statuses = ['active', 'completed', 'active', 'partial'];
+                    const status = statuses[Math.floor(Math.random() * statuses.length)];
+                    dayEl.classList.add(status);
+
+                    if (status === 'completed') {
+                        dayEl.style.background = '#FF6B00';
+                        dayEl.style.color = 'white';
+                    } else if (status === 'partial') {
+                        // Partial logic is CSS ::after
+                    }
+                } else {
+                    dayEl.classList.add('inactive'); // Future days
+                }
+
+                calendarDays.appendChild(dayEl);
+            }
+        }
+
+        renderCalendar();
+    </script>
+</body>
+
+</html>
